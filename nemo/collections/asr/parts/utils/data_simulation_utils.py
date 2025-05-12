@@ -871,11 +871,11 @@ class SpeechSampler(object):
         self.running_silence_len_samples = 0
         self.running_overlap_len_samples = 0
 
-        self.sess_silence_mean = None
+        self.sess_silence_mean = 0
         self.per_silence_min_len = 0
         self.per_silence_max_len = 0
 
-        self.sess_overlap_mean = None
+        self.sess_overlap_mean = 0
         self.per_overlap_min_len = 0
         self.per_overlap_max_len = 0
 

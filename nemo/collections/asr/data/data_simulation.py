@@ -1427,7 +1427,7 @@ class RIRMultiSpeakerSimulator(MultiSpeakerSimulator):
             RIR_pad (int): Length of padding added when convolving the RIR with an audio file
         """
 
-        rt60 = self._params.data_simulator.rir_generation.absorbtion_params.T60  # The desired reverberation time
+        rt60 = np.random.uniform(self._params.data_simulator.rir_generation.absorbtion_params.T60)[0]  # The desired reverberation time
         sr = self._params.data_simulator.sr
 
         room_sz_tmp = np.array(self._params.data_simulator.rir_generation.room_config.room_sz)
@@ -1635,10 +1635,12 @@ class RIRMultiSpeakerSimulator(MultiSpeakerSimulator):
             )
             self.annotator.annote_lists['json'].append(new_json_entry)
 
-            new_ctm_entries = self.annotator.create_new_ctm_entry(
-                filename, speaker_ids[speaker_turn], start / self._params.data_simulator.sr
-            )
-            self.annotator.annote_lists['ctm'].extend(new_ctm_entries)
+            #import pdb
+            #pdb.set_trace()
+            #new_ctm_entries = self.annotator.create_new_ctm_entry(
+            #    filename, speaker_ids[speaker_turn], start / self._params.data_simulator.sr
+            #)
+            #self.annotator.annote_lists['ctm'].extend(new_ctm_entries)
 
             running_len_samples = np.maximum(running_len_samples, end)
             self._furthest_sample[speaker_turn] = running_len_samples

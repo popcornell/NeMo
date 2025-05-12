@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/env bash
 set -e
 
 INSTALL_OPTION=${1:-"dev"}

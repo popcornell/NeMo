@@ -34,9 +34,13 @@ from tqdm import tqdm
 
 parser = argparse.ArgumentParser(description="LibriSpeech Data download")
 parser.add_argument("--data_root", required=True, default=None, type=str)
+parser.add_argument("--manifest_path", required=True, default=None, type=str)
 parser.add_argument("--data_sets", default="dev_clean", type=str)
 parser.add_argument("--num_workers", default=4, type=int)
+parser.add_argument("--skip_download", dest="skip_download", action="store_true", default=False)
 parser.add_argument("--log", dest="log", action="store_true", default=False)
+
+
 args = parser.parse_args()
 
 URLS = {
@@ -147,7 +151,6 @@ def __process_data(data_folder: str, dst_folder: str, manifest_file: str, num_wo
         num_workers: number of parallel workers processing files
     Returns:
     """
-
     if not os.path.exists(dst_folder):
         os.makedirs(dst_folder)
 
@@ -173,6 +176,8 @@ def main():
     data_root = args.data_root
     data_sets = args.data_sets
     num_workers = args.num_workers
+    skip_download = args.skip_download == 1
+    manifest_path = args.manifest_path
 
     if args.log:
         logging.basicConfig(level=logging.INFO)
@@ -185,14 +190,16 @@ def main():
         logging.info("\n\nWorking on: {0}".format(data_set))
         filepath = os.path.join(data_root, data_set + ".tar.gz")
         logging.info("Getting {0}".format(data_set))
-        __maybe_download_file(filepath, data_set.upper())
-        logging.info("Extracting {0}".format(data_set))
-        __extract_file(filepath, data_root)
-        logging.info("Processing {0}".format(data_set))
+        if not skip_download:
+            __maybe_download_file(filepath, data_set.upper())
+            logging.info("Extracting {0}".format(data_set))
+            __extract_file(filepath, data_root)
+            logging.info("Processing {0}".format(data_set))
+
         __process_data(
             os.path.join(os.path.join(data_root, "LibriSpeech"), data_set.replace("_", "-"),),
-            os.path.join(os.path.join(data_root, "LibriSpeech"), data_set.replace("_", "-"),) + "-processed",
-            os.path.join(data_root, data_set + ".json"),
+            os.path.join(os.path.join(manifest_path, "LibriSpeech"), data_set.replace("_", "-"),) + "-processed",
+            os.path.join(manifest_path, data_set.replace("_", "-") + ".json"),
             num_workers=num_workers,
         )
     logging.info("Done!")
