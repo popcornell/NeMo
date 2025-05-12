@@ -1,13 +1,15 @@
+num_workers: 16
 data_simulator:
   manifest_filepath: ??? # Manifest file with paths to single speaker audio files
 
   sr: 16000 # Sampling rate of the input audio files from the manifest
   random_seed: 42
-  multiprocessing_chunksize: 1 # Max number that multiprocessing can handle at once
+  multiprocessing_chunksize: 100 # Max number that multiprocessing can handle at once
+
 
   session_config:
     num_speakers: 2 # Number of unique speakers per multispeaker audio session
-    num_sessions: 2 # Number of sessions to simulate
+    num_sessions: 10000 # Number of sessions to simulate
     session_length: 600 # Length of each simulated multispeaker audio session (seconds)
     save_separate: False # duplex training ? useful for separation and other stuff
 

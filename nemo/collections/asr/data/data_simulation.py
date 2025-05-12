@@ -1635,12 +1635,11 @@ class RIRMultiSpeakerSimulator(MultiSpeakerSimulator):
             )
             self.annotator.annote_lists['json'].append(new_json_entry)
 
-            #import pdb
-            #pdb.set_trace()
-            #new_ctm_entries = self.annotator.create_new_ctm_entry(
-            #    filename, speaker_ids[speaker_turn], start / self._params.data_simulator.sr
-            #)
-            #self.annotator.annote_lists['ctm'].extend(new_ctm_entries)
+            new_ctm_entries = self.annotator.create_new_ctm_entry( self._words,
+                self._alignments,
+                filename, speaker_ids[speaker_turn], start / self._params.data_simulator.sr
+            )
+            self.annotator.annote_lists['ctm'].extend(new_ctm_entries)
 
             running_len_samples = np.maximum(running_len_samples, end)
             self._furthest_sample[speaker_turn] = running_len_samples
@@ -2328,6 +2327,7 @@ class RIRCorpusGenerator(object):
                 examples.append(example)
 
             # Simulation
+
             if self.num_workers is not None and self.num_workers > 1:
                 logging.info(f'Simulate using {self.num_workers} workers')
                 with multiprocessing.Pool(processes=self.num_workers) as pool:
